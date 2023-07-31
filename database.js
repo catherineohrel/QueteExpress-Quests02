@@ -10,23 +10,33 @@ const database = mysql.createPool({
     database: process.env.DB_NAME,
 });
 
-database
-    .getConnection()
-    .then(() => {
-        console.log("Can reach database");
-    })
-    .catch((Err) => {
-        console.error(err);
-    });
+// database
+//     .getConnection()
+//     .then(() => {
+//         console.log("Can reach database");
+//     })
+//     .catch((Err) => {
+//         console.error(err);
+//     });
 
-database
-    .query("Select * from movies")
-    .then((result) => {
-        const movies = result[0];
-        console.log(movies);
-    })
-    .catch((err) => {
-        console.error(err);
-    });
+// database
+//     .query("Select * from movies")
+//     .then((result) => {
+//         const movies = result[0];
+//         // console.log(movies);
+//     })
+//     .catch((err) => {
+//         console.error(err);
+//     });
+
+// database
+//   .query("Select * from users")
+//   .then((result) => {
+//     const users = result[0];
+//     // console.log(users);
+//   })    
+//   .catch((err) => {
+//     console.error(err);
+//   });
 
 module.exports = database;
