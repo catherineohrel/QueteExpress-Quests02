@@ -1,16 +1,25 @@
 const database = require("./database");
+const Joi = require("joi");
 
-// const getUsers = (req, res) => {
-//   database
-//     .query("select * from users")
-//     .then(([users]) => {
-//       res.status(200).json(users);
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(500).send("Error retrieving data from database");
-//     });
-// };
+const useSchema = Joi.object({
+  email: Joi.string().email().max(255).required(),
+  firstname: Joi.string().max(255).required(),
+  lastname: Joi.string().max(255).required(),
+});
+
+const validateUser = (req, res, next) => {
+  const {firstnmae, lastname, email } = req.body;
+
+  const { error } = userSchema.validate(
+    { firstname, lastname, email },
+    { abortEarly: false }
+  );
+  if (error) {
+    res.status(422).json({ validationErrors: error.details });
+  } else {
+    next();
+  }
+ };
 
 const getUsers = (req, res) => {
   let sql = "select * from users";
@@ -114,4 +123,5 @@ module.exports = {
   getUserById,
   postUser,
   updateUser,
+  validateUser,
 };
