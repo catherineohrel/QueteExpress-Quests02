@@ -1,7 +1,7 @@
 const database = require("./database");
 
 const getUsers = (req, res) => {
-  let sql = "select * from users";
+  let sql = "select firstname, lastname, email, city, language from users";
   const sqlValues = [];
   if (req.query.language != null) {
     sql += " where language = ?";
@@ -28,7 +28,7 @@ const getUserById = (req, res) => {
   const id = parseInt(req.params.id);
 
   database
-    .query("select * from users where id = ?", [id])
+    .query("select firstname, lastname, email, city, language from users where id = ?", [id])
     .then(([users]) => {
       if (users[0] != null) {
         res.status(200).json(users[0]);
@@ -43,11 +43,11 @@ const getUserById = (req, res) => {
 };
 
 const postUser = (req, res) => {
-  const {firstname, lastname, email, city, language} = req.body;
+  const {firstname, lastname, email, city, language, hashedPassword} = req.body;
   console.log(req.body);
   // res.send("User data received");
 
-  database.query("INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)", [firstname, lastname, email, city, language]
+  database.query("INSERT INTO users(firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)", [firstname, lastname, email, city, language, hashedPassword]
   )
   .then(([result]) => {
     res.location(`/api/users/${result.insertId}`).sendStatus(201)
@@ -60,9 +60,9 @@ res.status(500).send("Error saving the user");
 
 const updateUser = (req, res) => {
   const id =  parseInt(req.params.id);
-  const {firstname, lastname, email, city, language} = req.body;
+  const {firstname, lastname, email, city, language, hashedPassword} = req.body;
 
-  database.query("UPDATE users SET firstname = ?, lastname = ?, email = ?, city = ?, language = ? WHERE id = ?", [firstname, lastname, email, city, language, id]
+  database.query("UPDATE users SET firstname = ?, lastname = ?, email = ?, city = ?, language = ?, hashedPassword = ? WHERE id = ?", [firstname, lastname, email, city, language, hashedPassword, id]
   )
   .then(([result]) => {
     if (result.affectedRows === 0) {
